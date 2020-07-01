@@ -1,13 +1,7 @@
+<a href="index.php">Home</a>
 <div id="inputContainer">
-    <div id="headerContainer">
-        <ul>
-            <li><a href="viewTasks.php">Home</a></li>
-            <li><a href="viewList.php">View Lists</a></li>
-            <li><a href="connectToDB.php">Test</a></li>
-        </ul>
-    </div>
     <form method="post">
-        <p>Name of the list goes in here: </p>
+        <p>New name of the list goes in here: </p>
         <input type="text" name="nameInput">
         <input type="submit">
     </form>
@@ -16,20 +10,21 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $listName = changeInput($_POST["nameInput"]);
     if ($listName !== null) {
-        require "connectToDB.php";
         $user = "root";
         $pass = "";
+        $id = $_GET['id'];
 
         try {
             $dbh = new PDO('mysql:host=localhost;dbname=todobase', $user, $pass);
 
-            $stmt = $dbh->prepare("INSERT INTO listtable (listName) VALUE (:listName)");
-            $stmt->bindParam(':listName', $listName);
+            $stmt = $dbh->prepare("UPDATE `listtable` SET listName = (:newName) WHERE id = (:id)");
+            $stmt->bindParam(':newName', $listName);
+            $stmt->bindParam(':id', $id);
 
             $stmt->execute();
 
             $dbh = null;
-            echo "<p id='succesMessage'>added list ". $listName. " to the database</p>";
+            echo "<p id='succesMessage'>Changed list name.</p>";
         } catch (PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
             die();
@@ -44,4 +39,3 @@ function changeInput($data)
     $data = htmlspecialchars($data);
     return $data;
 }
-?>

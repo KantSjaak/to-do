@@ -1,6 +1,22 @@
+.listItem p {
+    display: inline;
+}
+
 .listItem {
-    font-size: 18px;
-    color: #62d19d;
-    margin: 15px auto;
+    list-style: none;
+}
+
+.listItem a {
+    text-decoration: none;
+    text-underline: none;
+    color: #000;
+    border: solid 1px black;
+    background-color: #a92f3c;
+    padding: 2px;
+}
+
+#taskTitle {
+    font-size: 4em;
     text-align: center;
+    margin: 0;
 }
