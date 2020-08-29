@@ -4,8 +4,46 @@
     <title>View Tasks</title>
     <link rel='stylesheet' type='text/css' href='../style.css'>
 </head>
+<body>
+<a href="index.php" class="BTN">home</a>
 <?php
 $idParent = $_GET['id'];
+echo "<a href=\"addTask.php?id=$idParent\" class=\"BTN\">add task</a>";
+echo "<label for=\"viewedTasks\"> What tasks do you want to see? </label>
+    <select name=\"viewedTasks\" id=\"viewedTasks\">
+        <option value=\"-1\">Show me all the tasks</option>
+        <option value=\"0\">Not Started</option>
+        <option value=\"1\">Ongoing</option>
+        <option value=\"2\">Halted</option>
+        <option value=\"3\">Completed</option>
+    </select>
+    <button type='button' onclick='showTasks()'>Filter!</button>";
+echo "<script>function showTasks() {
+  
+  let i = parseInt(document.getElementById(\"viewedTasks\").value);
+  if (i !== -1){
+      for (let headCount=0; headCount<4; headCount++){
+           if (headCount === i){
+               var items = document.getElementsByClassName(headCount);
+               for (var count=0; count < items.length; count++){
+                    items[count].style.display = \"block\";
+               }
+           }else{
+               var items = document.getElementsByClassName(headCount);
+               for (var count=0; count < items.length; count++){
+                    items[count].style.display = \"none\";
+               }
+           }
+      }
+  }else if(i === -1){
+      for (var a=0; a<4; a++){
+          var cleans = document.getElementsByClassName(a);
+          for (var cleanscount=0; cleanscount < cleans.length; cleanscount++){
+              cleans[cleanscount].style.display = \"block\";
+          }
+      } 
+  } 
+}</script>";
 
 $user = "root";
 $pass = "";
@@ -18,7 +56,7 @@ try {
     $stmt->bindParam(':idParent', $idParent);
     $stmt->execute();
     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    foreach($stmt->fetchAll() as $k=>$v) {
+    foreach ($stmt->fetchAll() as $k => $v) {
         echo "<p id='taskTitle'>$v[listName]</p>";
     }
 
@@ -29,12 +67,32 @@ try {
 
     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-    foreach($stmt->fetchAll() as $k=>$v) {
-        echo "<ul><li>id: $v[id]</li><li>name: $v[name]</li><li>status: $v[status]</li><li>duration: $v[duration]</li><li>description: $v[description]</li><li>parent id: $v[idParent]</li></ul>";
+    foreach ($stmt->fetchAll() as $k => $v) {
+        //dev note: I know that most items can be in one echo, but I think this is easier to read.
+        echo "<ul class='$v[status]'>";
+        echo "<li>id: $v[id]</li>";
+        echo "<li>name: $v[name]</li>";
+        if ($v['status'] == 0) {
+            echo "<li>Status: Not Started</li>";
+        } elseif ($v['status'] == 1) {
+            echo "<li>Status: Ongoing</li>";
+        } elseif ($v['status'] == 2) {
+            echo "<li>Status: Halted</li>";
+        } elseif ($v['status'] == 3) {
+            echo "<li>Status: Completed</li>";
+        } elseif ($v['status'] == "default") {
+            echo "<li>Status: Incorrect value entered when making/updating task</li>";
+        } else {
+            echo "<li>Status: There was an error, please excuse us.</li>";
+        }
+        echo "<li>duration: $v[duration]</li>";
+        echo "<li>description: $v[description]</li>";
+        echo "<li>parent id: $v[idParent]</li>";
+        echo "<a class='listEdit' href='editTask.php?id=$v[id]'>Edit</a><a class='listDelete' href='removeTask.php?id=$v[id]'>Delete</a>";
+        echo "</ul>";
     }
-}
-catch(PDOException $e) {
+} catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
-
-//INSERT INTO `taskTable` (name, status, duration, description, idParent) VALUES ('php challenge', 'ongoing', 7-1-2020, 'adding tasks, normal cards are done', 7)
+?>
+</body>

@@ -1,3 +1,34 @@
+.lists {
+    list-style-type: none;
+}
+
+.listName {
+    font-size: 20px;
+}
+
+.listEdit {
+    background-color: #50b64e;
+    border: 2px black solid;
+    padding: 2px 4px;
+    display: inline-block;
+    margin: 5px;
+    margin-left: 20px;
+}
+
+.listDelete {
+    background-color: #bc1721;
+    border: 2px black solid;
+    padding: 2px 4px;
+    display: inline-block;
+    margin: 5px;
+    margin-left: 20px;
+}
+
+.listName, .listName:active, .listName:link, .listEdit, .listEdit:active, .listEdit:link, .listDelete, .listDelete:active, .listDelete:link {
+    color: #000;
+    text-decoration: none;
+}
+
 .listItem p {
     display: inline;
 }
@@ -6,17 +37,18 @@
     list-style: none;
 }
 
-.listItem a {
-    text-decoration: none;
-    text-underline: none;
-    color: #000;
-    border: solid 1px black;
-    background-color: #a92f3c;
-    padding: 2px;
-}
-
 #taskTitle {
     font-size: 4em;
     text-align: center;
     margin: 0;
+}
+
+.BTN, .BTN:active, .BTN:hover, .BTN:link {
+    color: #000;
+    text-decoration: none;
+}
+
+#deleteMSG {
+    font-size: 25px;
+    color: #fe0026;
 }

@@ -1,22 +1,27 @@
-<div id="inputContainer">
-    <div id="headerContainer">
-        <ul>
-            <li><a href="viewTasks.php">Home</a></li>
-            <li><a href="viewList.php">View Lists</a></li>
-            <li><a href="connectToDB.php">Test</a></li>
-        </ul>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <title>Add List</title>
+    <link rel='stylesheet' type='text/css' href='../style.css'>
+</head>
+<body>
+    <div id="inputContainer">
+        <div id="headerContainer">
+            <ul>
+                <a href="index.php" class="BTN">home</a>
+            </ul>
+        </div>
+        <form method="post">
+            <p>Name of the list goes in here: </p>
+            <input type="text" name="nameInput">
+            <input type="submit">
+        </form>
     </div>
-    <form method="post">
-        <p>Name of the list goes in here: </p>
-        <input type="text" name="nameInput">
-        <input type="submit">
-    </form>
-</div>
+</body>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $listName = changeInput($_POST["nameInput"]);
     if ($listName !== null) {
-        require "connectToDB.php";
         $user = "root";
         $pass = "";
 
