@@ -17,7 +17,7 @@ echo "<label for=\"viewedTasks\"> What tasks do you want to see? </label>
         <option value=\"2\">Halted</option>
         <option value=\"3\">Completed</option>
     </select>
-    <button type='button' onclick='showTasks()'>Filter!</button>";
+    <button type='button' onclick='showTasks()'>Filter!</button><p id=\"order\">Not Started</p><button type='button' onclick='sortTasks()'>Sort!</button>";
 echo "<script>function showTasks() {
   
   let i = parseInt(document.getElementById(\"viewedTasks\").value);
@@ -43,7 +43,54 @@ echo "<script>function showTasks() {
           }
       } 
   } 
-}</script>";
+}
+const STATUS = [
+            {
+                id: 0,
+                name: \"Not Started\"
+            },
+            {
+                id: 1,
+                name: \"Ongoing\"
+            },
+            {
+                id: 2,
+                name: \"Halted\"
+            },
+            {
+                id: 3,
+                name: \"Completed\"
+            }
+        ];
+        let statusCounter = 0;
+
+        function sortTasks() {
+            statusCounter++;
+
+            let div = document.getElementById(\"statusWrapper\");
+            let selected = STATUS[statusCounter % STATUS.length];
+            document.getElementById(\"order\").innerText = selected.name;
+
+            let data = [];
+
+            for (let range = 0; range < STATUS.length; range++) {
+                for (let i = 0; i < div.children.length; i++) {
+                    let child = div.children[i];
+                    let id = parseInt(child.classList[0]);
+
+                    if ((statusCounter + range) % STATUS.length === id) {
+                        data.push(child.cloneNode(true));
+                    }
+                }
+            }
+
+            while(div.children.length > 0)
+                div.children[0].remove();
+
+            for (let i = 0; i < data.length; i++) {
+                div.appendChild(data[i]);
+            }
+        }</script>";
 
 $user = "root";
 $pass = "";
@@ -66,10 +113,10 @@ try {
     $stmt->execute();
 
     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-
+    echo "<div id='statusWrapper'>";
     foreach ($stmt->fetchAll() as $k => $v) {
         //dev note: I know that most items can be in one echo, but I think this is easier to read.
-        echo "<ul class='$v[status]'>";
+        echo "<ul class='$v[status]' '>";
         echo "<li>id: $v[id]</li>";
         echo "<li>name: $v[name]</li>";
         if ($v['status'] == 0) {
@@ -91,6 +138,7 @@ try {
         echo "<a class='listEdit' href='editTask.php?id=$v[id]'>Edit</a><a class='listDelete' href='removeTask.php?id=$v[id]'>Delete</a>";
         echo "</ul>";
     }
+    echo "</div>";
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
